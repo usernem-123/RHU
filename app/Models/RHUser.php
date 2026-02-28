@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class RHUser extends Model
+class RHUser extends Authenticatable
 {
     protected $table = 'rhu_users';
 
@@ -13,5 +13,10 @@ class RHUser extends Model
         'role',
         'username',
         'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 }

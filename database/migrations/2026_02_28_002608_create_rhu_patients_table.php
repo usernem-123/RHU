@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rhu_users', function (Blueprint $table) {
+        Schema::create('rhu_patients', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('role');
-            $table->string('username')->unique();
-            $table->string('password');
-            $table->rememberToken(); 
+            $table->string('address');
+            $table->string('gender');
+            $table->string('contact_number');
+            $table->string('birthday');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rhu_users');
+        Schema::dropIfExists('rhu_patients');
     }
 };
