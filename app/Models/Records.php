@@ -14,6 +14,6 @@ class Records extends Model
     ];
 
     public function patiente() {
-    return $this->belongsTo(Patientes::class, 'patientes_id');
-}
+        return $this->belongsTo(Patientes::class, 'patientes_id');
+    }
 }
