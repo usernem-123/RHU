@@ -12,4 +12,8 @@ class Records extends Model
         'type',
         'description',
     ];
+
+    public function patiente() {
+    return $this->belongsTo(Patientes::class, 'patientes_id');
+}
 }

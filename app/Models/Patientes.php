@@ -15,4 +15,8 @@ class Patientes extends Model
         'contact_number',
         'birthday',
     ];
+
+    public function records() {
+        return $this->hasMany(Records::class, 'patientes_id');
+    }
 }
