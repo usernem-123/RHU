@@ -41,6 +41,6 @@ class RHUserController extends Controller
         
         $req->session()->invalidate();
         $req->session()->regenerateToken();
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }

@@ -12,14 +12,25 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+
+    // Auth
     Route::get('/dashboard', [RHUserController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [RHUserController::class, 'logout'])->name('logout');
-    Route::get('/records', [RecordsController::class, 'showRecords'])->name('records');
-    Route::post('/records', [RecordsController::class, 'addRecord']);
-    Route::patch('/records/{id}', [RecordsController::class, 'updateRecord']);
-    Route::delete('/records/{id}', [RecordsController::class, 'deleteRecord']);
-    Route::get('/patients', [PatientController::class, 'showPatients'])->name('patients');
-    Route::post('/patients', [PatientController::class, 'addPatient']);
-    Route::patch('/patients/{id}', [PatientController::class, 'updatePatient']);
-    Route::delete('/patients/{id}', [PatientController::class, 'deletePatient']);
+
+    // Records
+    Route::prefix('records')->name('records.')->group(function () {
+        Route::get('/', [RecordsController::class, 'showRecords'])->name('index');
+        Route::post('/', [RecordsController::class, 'addRecord'])->name('store');
+        Route::patch('/{id}', [RecordsController::class, 'updateRecord'])->name('update');
+        Route::delete('/{id}', [RecordsController::class, 'deleteRecord'])->name('destroy');
+    });
+
+    // Patients
+    Route::prefix('patients')->name('patients.')->group(function () {
+        Route::get('/', [PatientController::class, 'showPatients'])->name('index');
+        Route::post('/', [PatientController::class, 'addPatient'])->name('store');
+        Route::patch('/{id}', [PatientController::class, 'updatePatient'])->name('update');
+        Route::delete('/{id}', [PatientController::class, 'deletePatient'])->name('destroy');
+    });
+
 });
