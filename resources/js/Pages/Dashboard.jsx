@@ -1,7 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import Layout from '../components/Layout';
 
-export default function Dashboard() {
+export default function Dashboard({ transactions, records, patients }) {
     const { auth } = usePage().props;
 
     return (
@@ -24,7 +24,7 @@ export default function Dashboard() {
             </div>
 
             {/* Dashboard Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {/* Stats Card 1 */}
                 <div className="bg-white rounded-xl shadow-sm border border-green-100 p-6 hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-4">
@@ -33,9 +33,8 @@ export default function Dashboard() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
-                        <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">+12%</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-800">1,234</h3>
+                    <h3 className="text-2xl font-bold text-gray-800">{patients.length}</h3>
                     <p className="text-sm text-gray-500">Total Patients</p>
                 </div>
 
@@ -47,10 +46,9 @@ export default function Dashboard() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">Today</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-800">48</h3>
-                    <p className="text-sm text-gray-500">Appointments</p>
+                    <h3 className="text-2xl font-bold text-gray-800">{transactions.length}</h3>
+                    <p className="text-sm text-gray-500">Clinic Transactions</p>
                 </div>
 
                 {/* Stats Card 3 */}
@@ -62,36 +60,59 @@ export default function Dashboard() {
                             </svg>
                         </div>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-800">156</h3>
-                    <p className="text-sm text-gray-500">Pending Records</p>
-                </div>
-
-                {/* Stats Card 4 */}
-                <div className="bg-white rounded-xl shadow-sm border border-green-100 p-6 hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="p-2 bg-yellow-100 rounded-lg">
-                            <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-800">3</h3>
-                    <p className="text-sm text-gray-500">Upcoming Tasks</p>
+                    <h3 className="text-2xl font-bold text-gray-800">{records.length}</h3>
+                    <p className="text-sm text-gray-500">Clinic Records</p>
                 </div>
             </div>
 
-            {/* Recent Activity Section */}
+                        {/* Recent Activity Section */}
             <div className="bg-white rounded-xl shadow-sm border border-green-100 p-6">
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h2>
+
                 <div className="space-y-4">
-                    {[1, 2, 3].map((item) => (
-                        <div key={item} className="flex items-center space-x-3 py-3 border-b border-gray-100 last:border-0">
+                    {[...transactions.map(t => ({
+                        id: `t-${t.id}`,
+                        type: "transaction",
+                        name: t.patient?.name ?? "Unknown",
+                        description: `${t.type} - ₱${t.payment}`,
+                        created_at: t.created_at
+                    })),
+                    ...records.map(r => ({
+                        id: `r-${r.id}`,
+                        type: "record",
+                        name: r.patient?.name ?? "Unknown",
+                        description: "New medical record",
+                        created_at: r.created_at
+                    }))]
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    .slice(0, 10)
+                    .map(item => (
+                        <div key={item.id} className="flex items-center space-x-3 py-3 border-b border-gray-100 last:border-0">
+
                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+
                             <div className="flex-1">
-                                <p className="text-sm text-gray-600">New patient record added</p>
-                                <p className="text-xs text-gray-400">5 minutes ago</p>
+                                <p className="text-sm text-gray-700 font-medium">
+                                    {item.name}
+                                </p>
+
+                                <p className="text-xs text-gray-500">
+                                    {item.description}
+                                </p>
+
+                                <p className="text-xs text-gray-400">
+                                    {new Date(item.created_at).toLocaleString()}
+                                </p>
                             </div>
-                            <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">New</span>
+
+                            <span className={`text-xs px-2 py-1 rounded-full ${
+                                item.type === "transaction"
+                                    ? "bg-blue-50 text-blue-600"
+                                    : "bg-purple-50 text-purple-600"
+                            }`}>
+                                {item.type}
+                            </span>
+
                         </div>
                     ))}
                 </div>

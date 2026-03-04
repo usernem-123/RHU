@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Models\Transaction;
+use App\Models\Records;
+use App\Models\Patientes;
 
 class RHUserController extends Controller
 {
@@ -15,7 +18,15 @@ class RHUserController extends Controller
     }
 
     public function dashboard(){
-        return Inertia::render('Dashboard');
+        $trans = Transaction::with('patient')->latest()->get();
+        $records = Records::with('patiente')->latest()->get();
+        $patients = Patientes::all();
+
+        return Inertia::render('Dashboard' , [
+            'transactions' => $trans,
+            'records' => $records,
+            'patients' => $patients
+        ]);
     }
 
     public function login(Request $request)

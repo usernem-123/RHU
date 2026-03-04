@@ -4,6 +4,7 @@ use App\Http\Controllers\RHUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecordsController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\TransactionController;
 
 
 Route::middleware('guest')->group(function () {
@@ -31,6 +32,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [PatientController::class, 'addPatient'])->name('store');
         Route::patch('/{id}', [PatientController::class, 'updatePatient'])->name('update');
         Route::delete('/{id}', [PatientController::class, 'deletePatient'])->name('destroy');
+    });
+
+    Route::prefix('transactions')->name('transactions.')->group(function () {
+        Route::get('/', [TransactionController::class, 'showTransactions'])->name('index');
+        Route::post('/', [TransactionController::class, 'addTransaction'])->name('store');
+        Route::delete('/{id}', [TransactionController::class, 'deleteTransaction'])->name('destroy');
     });
 
 });

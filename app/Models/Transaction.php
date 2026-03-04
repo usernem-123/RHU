@@ -13,4 +13,9 @@ class Transaction extends Model
         'type',
         'payment',
     ];
+
+    public function patient()
+    {
+        return $this->belongsTo(Patientes::class, 'patientes_id');
+    }
 }
