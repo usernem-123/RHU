@@ -54,4 +54,8 @@ class RHUserController extends Controller
         $req->session()->regenerateToken();
         return redirect()->route('login');
     }
+
+    public function showSettings(){
+        return Inertia::render('Settings');
+    }
 }

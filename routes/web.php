@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecordsController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\SettingsController;
 
 
 Route::middleware('guest')->group(function () {
@@ -17,6 +18,7 @@ Route::middleware('auth')->group(function () {
     // Auth
     Route::get('/dashboard', [RHUserController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [RHUserController::class, 'logout'])->name('logout');
+    Route::get('/settings', [RHUserController::class, 'showSettings'])->name('settings');
 
     // Records
     Route::prefix('records')->name('records.')->group(function () {
@@ -39,5 +41,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [TransactionController::class, 'addTransaction'])->name('store');
         Route::delete('/{id}', [TransactionController::class, 'deleteTransaction'])->name('destroy');
     });
+
+    // routes/web.php
+    Route::put('/settings/profile', [SettingsController::class, 'updateProfile']);
+    Route::put('/settings/password', [SettingsController::class, 'updatePassword']);
 
 });
